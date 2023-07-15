@@ -1,20 +1,27 @@
-print("*** String Rotation ***")
+print(" *** String count ***")
 
-src = list(map(str, input("Enter 2 strings : ").split(' ')))
-text = src
-def leftrotate(s):
-    tmp = s[1 : ] + s[0 : 1]
-    return tmp
+text = str(input("Enter message : "))
 
-def rightrotate(s):
-    tmp = s[0 : ] + s[1 : ]
-    return tmp
+up_count = 0
+low_count = 0
 
-round = 1
-while (text != src):
-    text[0] = leftrotate(text[0])
-    text[1] = rightrotate(text[1])
-    if (round <= 5):
-        print(round, end = ' ')
-        print(text[0], end = ' ')
-        print(text[1], end = ' ')
+char_list = [0]*128
+
+for alpha in text:
+    if alpha.isupper():
+        char_list[ord(alpha)] += 1
+        up_count += 1
+    if alpha.islower():
+        char_list[ord(alpha)] += 1
+        low_count += 1
+
+print("No. of Upper case characters : " + str(up_count))
+print("Unique Upper case characters : ", end = '')
+for num in range(128):
+    if char_list[num] > 0 and chr(num).isupper() :
+        print(chr(num), end = '  ')
+print("\nNo. of Lower case Characters : " + str(low_count))
+print("Unique Lower case characters : ", end = '')
+for num in range(128):
+    if char_list[num] > 0 and chr(num).islower() :
+        print(chr(num), end = '  ')

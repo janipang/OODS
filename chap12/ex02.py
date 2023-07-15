@@ -7,8 +7,8 @@ print(the_id)
 dict_src = {}
 for i in range(int(len(src)/2)):
     dict_src[str(src[2*i])] = float(src[(2*i + 1)])
-sorted_dict = dict(sorted(dict_src.items(), key=lambda x: x[1], reverse = True))
-print(dict_src)
+sorted_dict = dict(sorted(dict_src.items(), key=lambda x: (x[1], int(x[0])), reverse = True))
+# print(dict_src)
 # print((sorted_dict))
 
 flipped = {}
@@ -18,7 +18,23 @@ for key, value in sorted_dict.items():
         flipped[value] = [int(key)]
     else:
         flipped[value].append(int(key))
+        
+for key,value in flipped.items():
+    value.sort(reverse = False)
+    
+final = {}
+for key in flipped.keys():
+    for value in flipped[key]:
+        final[str(value)] = key
+
 # print(flipped)
+print(final)
+
+    
+if str(the_id) not in (final.keys()):
+    print("Not Found")
+    exit()
+
 rank = 0
 for key, value in flipped.items():
     if len(value) == 1:
@@ -33,4 +49,4 @@ for key, value in flipped.items():
             if mini_val <= the_id:
                 rank += 1
         print(rank)
-        exit
+        exit()
