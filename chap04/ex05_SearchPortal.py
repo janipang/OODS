@@ -26,25 +26,17 @@ class Queue:
 
 def check_map_correction(width, height, map):
     my_pos = 0
-    # end_pos = 0
     if len(map1) != height:
         print("Invalid map input.")
         exit(0)
     for line in map:
         my_pos += line.count('F')
-        # end_pos += line.count('O')
         if len(line) != width:
             print("Invalid map input.")
             exit(0)
     if my_pos != 1:
         print("Invalid map input.")
         exit(0)
-    # if end_pos < 1:
-    #     print("Cannot reach the exit portal.")
-    #     exit(0)
-    # elif end_pos != 1:
-    #     print("Invalid map input.")
-    #     exit(0)
         
 def get_start_pos(map):
     for line in map:
