@@ -49,7 +49,7 @@ class AVL_Tree(object):
     def insert(self, data):
         self.root = self._insert(self.root, data)
         self.rebalance(self.root)
-
+        
     def _insert(self, root, data):
         if root is None:
             return Node(data)
@@ -64,14 +64,18 @@ class AVL_Tree(object):
             return
         self.rebalance(root.left)
         self.rebalance(root.right)
-        if root.getBalance() > -1 and self.getBalance(root.left) > 1:
-            self.leftRotate(root)
+        if root.getBalance() > 1 and self.getBalance(root.left) >= 1:
+            # print("*")
+            self.rightRotate(root)
         elif root.getBalance() > 1 and self.getBalance(root.left) <= -1:
+            # print("**")
             self.leftRotate(root.left)
             self.rightRotate(root)
-        elif root.getBalance() < -1 and self.getBalance(root.left) < -1:
-            self.rightRotate(root)
-        elif root.getBalance() < -1 and self.getBalance(root.left) >= 1:
+        elif root.getBalance() < -1 and self.getBalance(root.right) <= -1:
+            # print("***")
+            self.leftRotate(root)
+        elif root.getBalance() < -1 and self.getBalance(root.right) >= 1:
+            # print("****")
             self.rightRotate(root.right)
             self.leftRotate(root)
         
@@ -95,6 +99,7 @@ class AVL_Tree(object):
 
             temp = self.find_min_value_node(root.right)
             root.data = temp.data
+            root.key = temp.key
             root.right = self._delete(root.right, temp.data)
 
         return root
@@ -139,6 +144,8 @@ class AVL_Tree(object):
         return self._getFatger(self.root, node)
         
     def _getFatger(self, root, node):
+        if root is None:
+            return None
         if root.left == node or root.right == node:
             return root
         if self._getFatger(root.left, node) is not None:
@@ -153,14 +160,17 @@ class AVL_Tree(object):
             self.printTree(node.left, level + 1)
     
     def printDirectory(self):
-        self._printDirectory(self.root)
+        if self.root is not None:
+            self._printDirectory(self.root)
         
-    def _printDirectory(self, root):
+    def _printDirectory(self, root, level=0):
         if root is None:
-            return "*"
-        print(root.data)
-        print(f"\t{self._printDirectory(root.left)}")
-        print(f"\t{self._printDirectory(root.right)}")
+            print(f"{'    ' * level}*")
+            return
+        print(f"{'    ' * level}{root.data} ({root.key})")
+        if root.left is not None or root.right is not None:
+            self._printDirectory(root.left, level + 1)
+            self._printDirectory(root.right, level + 1)
 
 
 T = AVL_Tree()
@@ -174,6 +184,5 @@ for i in inp:
     elif op == "D":
         root = T.delete(data)
     elif op == "P":
-        T.printTree(T.root)
+        T.printDirectory()
         print("------------------------------")
-T.printDirectory()
