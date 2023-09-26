@@ -20,45 +20,43 @@ class BST:
             root.right = self._insert(root.right, data)
         return root
     
-    def makeTree(self, n, next):
-        if next > n:
-            return
-        self.makeTree(n, next+1)
-        self.makeTree(n, next+2)
-        self.insert(n, next+1)
+    def makeTree(self, n):
+        self._makeTree(self.root, n, 1)
+        
+    def _makeTree(self, node, n, now):
+        if now > n:
+            return None
+        new = Node(ord('c'))
+        if self.root is None:
+            self.root = new
+        new.left = self._makeTree(new, n, 2*now)
+        new.right = self._makeTree(new, n, 2*now+1)
+        return new
+    
+    def fillLeaf(self, element):
+        Baby = [self.root]
+        while len(Baby) != 0:
+            node = Baby.pop(0)
+            if node.left is None and node.right is None:
+                node.data = element.pop(0)
+            if node.left is not None:
+                Baby.append(node.left) 
+            if node.right is not None:
+                Baby.append(node.right)
         
     def fill(self, root):
+        if root.left is None or root.right is None:
+            return
         self.fill(root.left)
         self.fill(root.right)
-        if self.left or self.right is None:
-            return
         root.data = min(root.left.data, root.right.data)
         root.left.data -= root.data
         root.right.data -= root.data
-
-    def delete(self, data):
-        self.root = self._delete(self.root, data)
-
-    def _delete(self, root, data):
+    
+    def sumNode(self, root):
         if root is None:
-            print("Error! Not Found DATA")
-            return root
-
-        if data < root.data:
-            root.left = self._delete(root.left, data)
-        elif data > root.data:
-            root.right = self._delete(root.right, data)
-        else:
-            if root.left is None:
-                return root.right
-            elif root.right is None:
-                return root.left
-
-            temp = self.find_min_value_node(root.right)
-            root.data = temp.data
-            root.right = self._delete(root.right, temp.data)
-
-        return root
+            return 0
+        return self.sumNode(root.left) + self.sumNode(root.right) + root.data
 
     def print_tree(self, node, level=0):
         if node is not None:
@@ -73,6 +71,8 @@ if len(element) != (n//2) + 1:
     print("Incorrect Input")
     exit(0)
 T = BST()
-for i in element:
-    T.insert(i)
-T.print_tree(T.root)
+T.makeTree(n)
+T.fillLeaf(element)
+T.fill(T.root)
+# T.print_tree(T.root)
+print(T.sumNode(T.root))
