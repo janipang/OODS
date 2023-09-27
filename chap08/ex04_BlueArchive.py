@@ -64,17 +64,18 @@ class AVL_Tree(object):
             return
         self.rebalance(root.left)
         self.rebalance(root.right)
-        if root.getBalance() > 1 and self.getBalance(root.left) >= 1:
+        if root.getBalance() > 1 and self.getBalance(root.left) >= 0:
             # print("*")
             self.rightRotate(root)
-        elif root.getBalance() > 1 and self.getBalance(root.left) <= -1:
+        elif root.getBalance() > 1:
             # print("**")
             self.leftRotate(root.left)
             self.rightRotate(root)
-        elif root.getBalance() < -1 and self.getBalance(root.right) <= -1:
+            
+        if root.getBalance() < -1 and self.getBalance(root.right) <= 0:
             # print("***")
             self.leftRotate(root)
-        elif root.getBalance() < -1 and self.getBalance(root.right) >= 1:
+        elif root.getBalance() < -1:
             # print("****")
             self.rightRotate(root.right)
             self.leftRotate(root)
@@ -93,9 +94,13 @@ class AVL_Tree(object):
             root.right = self._delete(root.right, data)
         else:
             if root.left is None:
-                return root.right
+                temp = root.right
+                root = None
+                return temp
             elif root.right is None:
-                return root.left
+                temp = root.left
+                root = None
+                return temp
 
             temp = self.find_min_value_node(root.right)
             root.data = temp.data
@@ -103,7 +108,7 @@ class AVL_Tree(object):
             root.right = self._delete(root.right, temp.data)
 
         return root
-
+    
     def leftRotate(self, z):
         parent = self.getFather(z)
         y = z.right
